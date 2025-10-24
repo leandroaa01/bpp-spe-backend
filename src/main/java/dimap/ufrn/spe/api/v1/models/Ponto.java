@@ -1,4 +1,4 @@
-package dimap.ufrn.spe.api.v1.spe.models;
+package dimap.ufrn.spe.api.v1.models;
 
 import java.time.*;
 

@@ -1,11 +1,11 @@
-package dimap.ufrn.spe.api.v1.spe.services;
+package dimap.ufrn.spe.api.v1.services;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import dimap.ufrn.spe.api.v1.spe.dtos.BolsistaPontoDTO;
-import dimap.ufrn.spe.api.v1.spe.repositories.PontoRepository;
+import dimap.ufrn.spe.api.v1.dtos.BolsistaPontoDTO;
+import dimap.ufrn.spe.api.v1.repositories.PontoRepository;
 
 @Service
 public class PontoService {

@@ -1,4 +1,4 @@
-package dimap.ufrn.spe.api.v1.spe.dtos;
+package dimap.ufrn.spe.api.v1.dtos;
 
 import java.time.LocalDateTime;
 

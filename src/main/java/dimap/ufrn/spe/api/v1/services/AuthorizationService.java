@@ -1,4 +1,4 @@
-package dimap.ufrn.spe.api.v1.spe.services;
+package dimap.ufrn.spe.api.v1.services;
 
 
 
@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import dimap.ufrn.spe.api.v1.spe.repositories.UserRepository;
+import dimap.ufrn.spe.api.v1.repositories.UserRepository;
 
 @Service
 public class AuthorizationService implements UserDetailsService {

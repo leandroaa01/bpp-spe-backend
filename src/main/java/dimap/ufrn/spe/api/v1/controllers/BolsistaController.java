@@ -1,4 +1,4 @@
-package dimap.ufrn.spe.api.v1.spe.controllers;
+package dimap.ufrn.spe.api.v1.controllers;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import dimap.ufrn.spe.api.v1.spe.dtos.PontoDTO;
-import dimap.ufrn.spe.api.v1.spe.models.Ponto;
-import dimap.ufrn.spe.api.v1.spe.models.User;
-import dimap.ufrn.spe.api.v1.spe.repositories.PontoRepository;
-import dimap.ufrn.spe.api.v1.spe.repositories.UserRepository;
+
+import dimap.ufrn.spe.api.v1.dtos.PontoDTO;
+import dimap.ufrn.spe.api.v1.models.Ponto;
+import dimap.ufrn.spe.api.v1.models.User;
+import dimap.ufrn.spe.api.v1.repositories.PontoRepository;
+import dimap.ufrn.spe.api.v1.repositories.UserRepository;
 
 @RestController
 @RequestMapping("/spe/api/bolsista")

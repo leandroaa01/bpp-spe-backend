@@ -1,4 +1,4 @@
-package dimap.ufrn.spe.api.v1.spe.controllers;
+package dimap.ufrn.spe.api.v1.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

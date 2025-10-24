@@ -1,4 +1,4 @@
-package dimap.ufrn.spe.api.v1.spe.controllers;
+package dimap.ufrn.spe.api.v1.controllers;
 
 import java.util.List;
 
@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dimap.ufrn.spe.api.v1.spe.dtos.BolsistaPontoDTO;
-import dimap.ufrn.spe.api.v1.spe.dtos.RegisterDTO;
-import dimap.ufrn.spe.api.v1.spe.models.User;
-import dimap.ufrn.spe.api.v1.spe.repositories.UserRepository;
-import dimap.ufrn.spe.api.v1.spe.services.PontoService;
+import dimap.ufrn.spe.api.v1.dtos.BolsistaPontoDTO;
+import dimap.ufrn.spe.api.v1.dtos.RegisterDTO;
+import dimap.ufrn.spe.api.v1.models.User;
+import dimap.ufrn.spe.api.v1.repositories.UserRepository;
+import dimap.ufrn.spe.api.v1.services.PontoService;
 import jakarta.validation.Valid;
 
 @RestController

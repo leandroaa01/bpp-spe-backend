@@ -1,4 +1,4 @@
-package dimap.ufrn.spe.api.v1.spe.security;
+package dimap.ufrn.spe.api.v1.security;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -12,7 +12,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 
-import dimap.ufrn.spe.api.v1.spe.models.User;
+import dimap.ufrn.spe.api.v1.models.User;
 
 @Service
 public class TokenService {

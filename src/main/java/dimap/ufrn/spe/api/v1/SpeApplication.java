@@ -1,13 +1,15 @@
-package dimap.ufrn.spe.api.v1.spe;
+package dimap.ufrn.spe.api.v1;
 
-import dimap.ufrn.spe.api.v1.spe.models.Roles;
-import dimap.ufrn.spe.api.v1.spe.models.User;
-import dimap.ufrn.spe.api.v1.spe.repositories.UserRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import dimap.ufrn.spe.api.v1.models.Roles;
+import dimap.ufrn.spe.api.v1.models.User;
+import dimap.ufrn.spe.api.v1.repositories.UserRepository;
 
 @SpringBootApplication
 public class SpeApplication implements CommandLineRunner {

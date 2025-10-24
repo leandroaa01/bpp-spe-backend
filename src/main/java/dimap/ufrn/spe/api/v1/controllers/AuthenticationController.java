@@ -1,4 +1,4 @@
-package dimap.ufrn.spe.api.v1.spe.controllers;
+package dimap.ufrn.spe.api.v1.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -8,11 +8,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import dimap.ufrn.spe.api.v1.spe.dtos.AuthenticationDTO;
-import dimap.ufrn.spe.api.v1.spe.dtos.LoginResponseDTO;
-import dimap.ufrn.spe.api.v1.spe.models.User;
-import dimap.ufrn.spe.api.v1.spe.repositories.UserRepository;
-import dimap.ufrn.spe.api.v1.spe.security.TokenService;
+
+import dimap.ufrn.spe.api.v1.dtos.AuthenticationDTO;
+import dimap.ufrn.spe.api.v1.dtos.LoginResponseDTO;
+import dimap.ufrn.spe.api.v1.models.User;
+import dimap.ufrn.spe.api.v1.repositories.UserRepository;
+import dimap.ufrn.spe.api.v1.security.TokenService;
 import jakarta.validation.Valid;
     
     @RestController
