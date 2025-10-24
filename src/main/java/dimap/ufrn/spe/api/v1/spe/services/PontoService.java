@@ -21,10 +21,10 @@ public class PontoService {
 
         return pontos.stream()
                      .map(p -> new BolsistaPontoDTO(
-                         p.getBolsista() != null ? p.getBolsista().getId() : -1L,
+                         p.getBolsista() != null ? p.getBolsista().getName() : " ",
                          p.getHoraDeEntrada(),
                          p.getHoraDeSaida(),
-                         p.getQtdDeHorasFeitas()  // double direto, sem " Hrs"
+                         p.getQtdDeHorasFeitas()  
                      ))
                      .toList();
     }
