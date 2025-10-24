@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import dimap.ufrn.spe.api.v1.spe.dtos.PontoDTO;
 import dimap.ufrn.spe.api.v1.spe.models.Ponto;
 import dimap.ufrn.spe.api.v1.spe.models.User;
 import dimap.ufrn.spe.api.v1.spe.repositories.PontoRepository;
 import dimap.ufrn.spe.api.v1.spe.repositories.UserRepository;
+
 @RestController
 @RequestMapping("/spe/api/bolsista")
 public class BolsistaController {
@@ -69,12 +69,25 @@ public class BolsistaController {
         return "Saída registrada com sucesso! Total de horas: " + ponto.getQtdDeHorasFeitas();
     }
 
+   
     @PreAuthorize("hasRole('BOLSISTA')")
     @GetMapping("/meus-pontos")
     public Stream<Object> visualizarMeusPontos(@AuthenticationPrincipal User bolsista) {
         var pontos = pontoRepository.findAllByBolsista(bolsista);
 
-    return pontos.stream()
-                 .map(p -> new PontoDTO(p.getHoraDeEntrada(),p.getHoraDeSaida(),String.valueOf(p.getQtdDeHorasFeitas())+" Hrs"));
+        return pontos.stream()
+                .map(p -> new PontoDTO(p.getHoraDeEntrada(), p.getHoraDeSaida(),
+                        String.valueOf(p.getQtdDeHorasFeitas()) + " Hrs"));
+    }
+
+    @PreAuthorize("hasRole('BOLSISTA')")
+    @GetMapping("/total-horas")
+    public String getTotalHoras(@AuthenticationPrincipal User bolsista) {
+        var totalHoras = pontoRepository.findAllByBolsista(bolsista)
+                .stream()
+                .mapToDouble(Ponto::getQtdDeHorasFeitas)
+                .sum();
+        totalHoras = Math.round(totalHoras * 100.0) / 100.0; 
+        return "Total de horas trabalhadas: " + totalHoras + " Hrs";
     }
 }
