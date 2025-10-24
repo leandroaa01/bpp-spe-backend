@@ -14,6 +14,11 @@ import dimap.ufrn.spe.api.v1.dtos.LoginResponseDTO;
 import dimap.ufrn.spe.api.v1.models.User;
 import dimap.ufrn.spe.api.v1.repositories.UserRepository;
 import dimap.ufrn.spe.api.v1.security.TokenService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
     
     @RestController
@@ -26,6 +31,15 @@ import jakarta.validation.Valid;
         @Autowired
         private TokenService tokenService;
     
+        @Operation(summary = "Realizar login", description = "Endpoint para autenticar um usuário e gerar um token de acesso.")
+        @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Login realizado com sucesso", 
+                     content = @Content(schema = @Schema(implementation = LoginResponseDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Dados de login inválidos", 
+                     content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "401", description = "Credenciais incorretas ou não autorizadas", 
+                     content = @Content(schema = @Schema(implementation = String.class)))
+        })
         @PostMapping("/login")
         public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data){
             var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());

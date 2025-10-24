@@ -17,6 +17,12 @@ import dimap.ufrn.spe.api.v1.models.Ponto;
 import dimap.ufrn.spe.api.v1.models.User;
 import dimap.ufrn.spe.api.v1.repositories.PontoRepository;
 import dimap.ufrn.spe.api.v1.repositories.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/spe/api/bolsista")
@@ -28,6 +34,12 @@ public class BolsistaController {
     @Autowired
     private UserRepository userRepository;
 
+    @Operation(summary = "Registrar entrada", description = "Endpoint para registrar a entrada de um bolsista.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Entrada registrada com sucesso."),
+        @ApiResponse(responseCode = "400", description = "Erro ao registrar entrada."),
+        @ApiResponse(responseCode = "403", description = "Acesso negado, sem permissão de bolsista.")
+    })
     @PreAuthorize("hasRole('BOLSISTA')")
     @PostMapping("/entrada")
     public String registrarEntrada(@AuthenticationPrincipal User bolsista) {
@@ -49,6 +61,12 @@ public class BolsistaController {
         return "Entrada registrada com sucesso!";
     }
 
+    @Operation(summary = "Registrar saída", description = "Endpoint para registrar a saída de um bolsista.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Saída registrada com sucesso."),
+        @ApiResponse(responseCode = "400", description = "Erro ao registrar saída."),
+        @ApiResponse(responseCode = "403", description = "Acesso negado, sem permissão de bolsista.")
+    })
     @PreAuthorize("hasRole('BOLSISTA')")
     @PostMapping("/saida")
     public String registrarSaida(@AuthenticationPrincipal User bolsista) {
@@ -70,7 +88,13 @@ public class BolsistaController {
         return "Saída registrada com sucesso! Total de horas: " + ponto.getQtdDeHorasFeitas();
     }
 
-   
+    @Operation(summary = "Visualizar pontos", description = "Endpoint para visualizar os pontos registrados pelo bolsista.")
+    @ApiResponses(value = {
+       @ApiResponse(responseCode = "200", description = "Pontos retornados com sucesso.",
+                 content = @Content(array = @ArraySchema(schema = @Schema(implementation = PontoDTO.class)))),
+        @ApiResponse(responseCode = "403", description = "Acesso negado, sem permissão de bolsista.",
+                 content = @Content(schema = @Schema(implementation = String.class)))
+    })
     @PreAuthorize("hasRole('BOLSISTA')")
     @GetMapping("/meus-pontos")
     public Stream<Object> visualizarMeusPontos(@AuthenticationPrincipal User bolsista) {
@@ -81,6 +105,11 @@ public class BolsistaController {
                         String.valueOf(p.getQtdDeHorasFeitas()) + " Hrs"));
     }
 
+    @Operation(summary = "Obter total de horas", description = "Endpoint para obter o total de horas trabalhadas pelo bolsista.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Total de horas retornado com sucesso."),
+        @ApiResponse(responseCode = "403", description = "Acesso negado, sem permissão de bolsista.")
+    })
     @PreAuthorize("hasRole('BOLSISTA')")
     @GetMapping("/total-horas")
     public String getTotalHoras(@AuthenticationPrincipal User bolsista) {
