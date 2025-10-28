@@ -20,6 +20,8 @@ import dimap.ufrn.spe.api.v1.models.User;
 import dimap.ufrn.spe.api.v1.repositories.UserRepository;
 import dimap.ufrn.spe.api.v1.services.PontoService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -37,7 +39,15 @@ public class AdmController {
     @Autowired
      private UserRepository repository;
 
-  @Operation(summary = "Registrar um novo usuário", description = "Endpoint para registrar um novo usuário no sistema.")
+  @Operation(summary = "Registrar um novo usuário", description = "Endpoint para registrar um novo usuário no sistema.",parameters = {
+        @Parameter(
+            name = "Authorization",
+            description = "Token JWT no formato: **Bearer <token>**",
+            required = true,
+            in = ParameterIn.HEADER,
+            schema = @Schema(type = "string", example = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
+        )
+    })
 @ApiResponses(value = {
     @ApiResponse(responseCode = "200", description = "Usuário registrado com sucesso"),
     @ApiResponse(responseCode = "400", description = "Dados inválidos ou já em uso", 
@@ -69,7 +79,15 @@ public class AdmController {
        return ResponseEntity.ok("User registered successfully");
    }
 
-   @Operation(summary = "Listar todos os pontos", description = "Endpoint para listar todos os pontos registrados no sistema.")
+   @Operation(summary = "Listar todos os pontos", description = "Endpoint para listar todos os pontos registrados no sistema.",parameters = {
+        @Parameter(
+            name = "Authorization",
+            description = "Token JWT no formato: **Bearer <token>**",
+            required = true,
+            in = ParameterIn.HEADER,
+            schema = @Schema(type = "string", example = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
+        )
+    })
    @ApiResponses(value = {
        @ApiResponse(responseCode = "200", description = "Lista de pontos retornada com sucesso", 
                     content = @Content(schema = @Schema(implementation = BolsistaPontoDTO.class))),
