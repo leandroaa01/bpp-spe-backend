@@ -141,77 +141,11 @@ Ao executar a aplicação pela primeira vez, um usuário administrador será cri
 **⚠️ IMPORTANTE**: Altere a senha padrão após o primeiro login!
 
 ## 📚 API Endpoints
+Para ver todos os endpoints desta API você deve executar o projeto e abrir a seguinte URL: `http://localhost:8080/swagger-ui/index.html#/`.
 
-### Autenticação
+Veja a imagem abaixo:
 
-#### POST `/auth/login`
-Realizar login no sistema
-
-**Request Body:**
-```json
-{
-  "username": "redes",
-  "password": "123456789"
-}
-```
-
-**Response:**
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
-```
-
-#### POST `/auth/register`
-Registrar novo usuário
-
-**Request Body:**
-```json
-{
-  "name": "João Silva",
-  "username": "joao.silva",
-  "password": "senha123",
-  "email": "joao.silva@example.com",
-  "roles": "BOLSISTA"
-}
-```
-
-### Endpoints do Bolsista (Requer Role: BOLSISTA)
-
-Todos os endpoints abaixo requerem o header de autenticação:
-```
-Authorization: Bearer {seu_token_jwt}
-```
-
-#### POST `/spe/api/bolsista/entrada`
-Registrar entrada (início do expediente)
-
-**Response:**
-```
-"Entrada registrada para joao.silva"
-```
-
-#### POST `/spe/api/bolsista/saida`
-Registrar saída (fim do expediente)
-
-**Response:**
-```
-"Saída registrada com sucesso! Total de horas: 8.5"
-```
-
-#### GET `/spe/api/bolsista/meus-pontos`
-Visualizar histórico de pontos
-
-**Response:**
-```json
-[
-  {
-    "horaDeEntrada": "2025-10-12T08:00:00",
-    "horaDeSaida": "2025-10-12T17:00:00",
-    "qtdDeHorasFeitas": "9.0 Hrs"
-  }
-]
-```
+![Swagger UI](/docs/swagger.png "Endpoints da API")
 
 ## 🔐 Sistema de Autenticação
 
@@ -229,41 +163,59 @@ Visualizar histórico de pontos
 
 - **ADMIN**: Acesso total ao sistema
 - **BOLSISTA**: Pode registrar entrada/saída e visualizar seus próprios pontos
-- **TECNICO**: Perfil para técnicos (funcionalidades podem ser expandidas)
 
 ## 📁 Estrutura do Projeto
 
 ```
-bpp-spe-backend-java/
+bpp-spe-backend/
+├── mvnw
+├── mvnw.cmd
+├── pom.xml
+├── README.md
+├── docs/           # Documentação do projeto
+├── refactoring/
+│   ├── code-smells-identified.md
+│   ├── quality-metric.md
+│   ├── refactoring-log.md
+│   └── before-after-examples/
+│       └── ...
 ├── src/
 │   ├── main/
-│   │   ├── java/dimap/ufrn/spe/api/v1/spe/
-│   │   │   ├── controllers/        # Controladores REST
-│   │   │   │   ├── AuthenticationController.java
-│   │   │   │   └── BolsistaController.java
-│   │   │   ├── dtos/               # Data Transfer Objects
-│   │   │   │   ├── AuthenticationDTO.java
-│   │   │   │   ├── LoginResponseDTO.java
-│   │   │   │   ├── PontoDTO.java
-│   │   │   │   └── RegisterDTO.java
-│   │   │   ├── models/             # Entidades do banco de dados
-│   │   │   │   ├── Ponto.java
-│   │   │   │   ├── Roles.java
-│   │   │   │   └── User.java
-│   │   │   ├── repositories/       # Repositórios JPA
-│   │   │   │   ├── PontoRepository.java
-│   │   │   │   └── UserRepository.java
-│   │   │   ├── security/           # Configurações de segurança
-│   │   │   │   ├── SecurityConfigurations.java
-│   │   │   │   ├── SecurityFilter.java
-│   │   │   │   └── TokenService.java
-│   │   │   ├── services/           # Serviços de negócio
-│   │   │   │   └── AuthorizationService.java
-│   │   │   └── SpeApplication.java # Classe principal
+│   │   ├── java/
+│   │   │   └── dimap/ufrn/spe/api/v1/
+│   │   │       ├── controllers/        # Controladores REST
+│   │   │       │   ├── AdmController.java
+│   │   │       │   ├── AuthenticationController.java
+│   │   │       │   ├── BolsistaController.java
+│   │   │       │   └── RootController.java
+│   │   │       ├── dtos/               # Data Transfer Objects
+│   │   │       │   ├── AuthenticationDTO.java
+│   │   │       │   ├── BolsistaPontoDTO.java
+│   │   │       │   ├── DadosDTO.java
+│   │   │       │   ├── LoginResponseDTO.java
+│   │   │       │   ├── PasswordDTO.java
+│   │   │       │   ├── PontoDTO.java
+│   │   │       │   ├── RegisterDTO.java
+│   │   │       │   └── UpdateDTO.java
+│   │   │       ├── models/             # Entidades do banco de dados
+│   │   │       │   ├── Ponto.java
+│   │   │       │   ├── Roles.java
+│   │   │       │   └── User.java
+│   │   │       ├── repositories/       # Repositórios JPA
+│   │   │       │   ├── PontoRepository.java
+│   │   │       │   └── UserRepository.java
+│   │   │       ├── security/           # Configurações de segurança
+│   │   │       │   ├── SecurityConfigurations.java
+│   │   │       │   ├── SecurityFilter.java
+│   │   │       │   └── TokenService.java
+│   │   │       ├── services/           # Serviços de negócio
+│   │   │       │   ├── AuthorizationService.java
+│   │   │       │   └── PontoService.java
+│   │   │       └── SpeApplication.java  # Classe principal
 │   │   └── resources/
 │   │       └── application.properties  # Configurações da aplicação
 │   └── test/                       # Testes unitários e de integração
-├── pom.xml                         # Configuração do Maven
+├── target/                         # Build output (gerado)
 └── README.md                       # Este arquivo
 ```
 
@@ -340,24 +292,6 @@ bpp-spe-backend-java/
 1. Edite a entidade em `models/`
 2. O Hibernate atualizará o schema automaticamente (se `ddl-auto=update`)
 3. Para mudanças complexas, considere usar Flyway ou Liquibase
-
-### Configuração de CORS (se necessário)
-
-Se você precisar permitir requisições de um frontend em outro domínio, adicione no `SecurityConfigurations.java`:
-
-```java
-@Bean
-public CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-    configuration.setAllowedHeaders(Arrays.asList("*"));
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration);
-    return source;
-}
-```
-
 ## 📄 Licença
 
 Este projeto está sob a licença [especificar licença].
