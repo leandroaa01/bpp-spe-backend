@@ -8,16 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dimap.ufrn.spe.api.v1.dtos.DadosDTO;
-import dimap.ufrn.spe.api.v1.dtos.PasswordDTO;
 import dimap.ufrn.spe.api.v1.dtos.PontoDTO;
 import dimap.ufrn.spe.api.v1.models.Ponto;
 import dimap.ufrn.spe.api.v1.models.User;
@@ -32,10 +28,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/spe/api/bolsista")
+@Tag(name = "Bolsista", description = "Endpoints para gestão de pontos e dados do bolsista")
 public class BolsistaController {
 
     @Autowired
@@ -174,8 +171,8 @@ public class BolsistaController {
     }
 
     @Operation(
-    summary = "Atualizar meus dados",
-    description = "Endpoint para o bolsista atualizar seu nome, username e email.",
+    summary = "Meus dados",
+    description = "Endpoint para o bolsista visualizar seus dados.",
     parameters = {
         @Parameter(
             name = "Authorization",
@@ -184,90 +181,25 @@ public class BolsistaController {
             in = ParameterIn.HEADER,
             schema = @Schema(type = "string", example = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
         )
-    },
-    requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-        description = "Dados do bolsista para atualização.",
-        required = true,
-        content = @Content(
-            schema = @Schema(implementation = DadosDTO.class)
-        )
-    )
+    }
 )
 @ApiResponses(value = {
-    @ApiResponse(responseCode = "200", description = "Dados atualizados com sucesso."),
-    @ApiResponse(responseCode = "400", description = "Erro de validação ou conflito de dados."),
+    @ApiResponse(responseCode = "200", description = "Dados retornados com sucesso."),
     @ApiResponse(responseCode = "403", description = "Acesso negado, sem permissão de bolsista.")
 })
 @SecurityRequirement(name = "bearerAuth")
 @PreAuthorize("hasRole('BOLSISTA')")
-@PutMapping("/update/meus-dados")
-public ResponseEntity<String> atualizarMeusDados(
-        @AuthenticationPrincipal User bolsista,
-        @RequestBody @Valid DadosDTO dados) {
+@GetMapping("/meus-dados")
+public ResponseEntity<DadosDTO> atualizarMeusDados(
+        @AuthenticationPrincipal User bolsista) {
 
-    var usuarioComMesmoUsername = userRepository.findByUsername(dados.username());
-    if (usuarioComMesmoUsername != null && usuarioComMesmoUsername.getId() != bolsista.getId()) {
-        return ResponseEntity.badRequest().body("Username indisponível.");
-    }
-
-    var usuarioComMesmoEmail = userRepository.findByEmail(dados.email());
-    if (usuarioComMesmoEmail != null && usuarioComMesmoEmail.getId() != bolsista.getId()) {
-        return ResponseEntity.badRequest().body("Email já em uso.");
-    }
-
-    bolsista.setName(dados.name());
-    bolsista.setUsername(dados.username());
-    bolsista.setEmail(dados.email());
-
-    userRepository.save(bolsista);
-
-    return ResponseEntity.ok("Dados atualizados com sucesso.");
+    var dados = userRepository.findById(bolsista.getId());
+   return ResponseEntity.ok(new DadosDTO(
+        dados.get().getName(),
+        dados.get().getUsername(),
+        dados.get().getEmail()
+    ));
 }
 
-@Operation(
-    summary = "Atualizar senha do bolsista",
-    description = "Endpoint para o bolsista alterar sua senha atual por uma nova senha.",
-    parameters = {
-        @Parameter(
-            name = "Authorization",
-            description = "Token JWT no formato: **Bearer <token>**",
-            required = true,
-            in = ParameterIn.HEADER,
-            schema = @Schema(type = "string", example = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
-        )
-    },
-    requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-        description = "Objeto contendo a nova senha.",
-        required = true,
-        content = @Content(
-            schema = @Schema(implementation = PasswordDTO.class)
-        )
-    )
-)
-@ApiResponses(value = {
-    @ApiResponse(responseCode = "200", description = "Senha atualizada com sucesso."),
-    @ApiResponse(responseCode = "400", description = "Erro de validação, senha vazia ou fraca."),
-    @ApiResponse(responseCode = "403", description = "Acesso negado, sem permissão de bolsista.")
-})
-@SecurityRequirement(name = "bearerAuth")
-@PreAuthorize("hasRole('BOLSISTA')")
-@PutMapping("/update/meu-password")
-public ResponseEntity<String> mudarSenha(
-        @AuthenticationPrincipal User bolsista,
-        @RequestBody @Valid PasswordDTO dado) {
-
-    if (dado.senhaNova().isEmpty())
-        return ResponseEntity.badRequest().body("Erro: senha vazia.");
-
-    if (dado.senhaNova().length() < 8)
-        return ResponseEntity.badRequest().body("Senha muito fraca, mínimo 8 caracteres.");
-
-    var encoder = new BCryptPasswordEncoder();
-    bolsista.setPassword(encoder.encode(dado.senhaNova()));
-
-    userRepository.save(bolsista);
-
-    return ResponseEntity.ok("Senha atualizada com sucesso.");
-}
 
 }

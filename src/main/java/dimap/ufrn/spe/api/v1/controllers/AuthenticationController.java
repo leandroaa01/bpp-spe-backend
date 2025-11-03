@@ -19,10 +19,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
     
     @RestController
     @RequestMapping("auth")
+    @Tag(name = "Autenticação", description = "Endpoints para autenticação de usuários")
     public class AuthenticationController {
         @Autowired
         private AuthenticationManager authenticationManager;
