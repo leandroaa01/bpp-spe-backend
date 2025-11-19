@@ -51,7 +51,7 @@ public class AdmController {
             @Parameter(name = "Authorization", description = "Token JWT no formato: **Bearer <token>**", required = true, in = ParameterIn.HEADER, schema = @Schema(type = "string", example = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."))
     })
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Usuário registrado com sucesso"),
+            @ApiResponse(responseCode = "200", description = "User registrado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos ou já em uso", content = @Content(schema = @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "403", description = "Acesso negado, sem permissão administrativa", content = @Content(schema = @Schema(implementation = String.class)))
     })
@@ -120,7 +120,7 @@ public class AdmController {
 
         repository.save(bolsista);
 
-        return ResponseEntity.ok("Senha atualizada com sucesso.");
+        return ResponseEntity.ok("Password updated successfully");
     }
 
     @Operation(summary = "Atualizar dados do bolsista", description = "Endpoint para atualizar os dados do bolsista.", parameters = {
@@ -144,6 +144,6 @@ public class AdmController {
 
         repository.save(bolsista);
 
-        return ResponseEntity.ok("Dados atualizados com sucesso.");
+        return ResponseEntity.ok("User data updated successfully.");
     }
 }

@@ -127,17 +127,63 @@ public class EndpointsIntegrationTests {
 
     @Test
     public void testRegistrarEntradaSuccess() throws Exception {
-        // Arrange - Simula que não há pontos abertos
-        when(pontoRepository.findAllByBolsista(any(User.class))).thenReturn(List.of());
-        // Simula o salvamento do ponto
-        when(pontoRepository.save(any(Ponto.class))).thenReturn(new Ponto());
+            // Arrange - Simula que não há pontos abertos
+            when(pontoRepository.findAllByBolsista(any(User.class))).thenReturn(List.of());
+            // Simula o salvamento do ponto
+            when(pontoRepository.save(any(Ponto.class))).thenReturn(new Ponto());
+
+            // Act & Assert
+            mockMvc.perform(post("/spe/api/bolsista/entrada")
+                            .with(bolsistaAuth())) // Autenticação como bolsista
+                            .andExpect(status().isOk()) // Verifica se o status da resposta é 200 OK
+                            .andExpect(content().string("Entrada registrada com sucesso!")); // Verifica a mensagem de sucesso
+    }
+    
+    @Test
+    public void testRegistrarSaidaSuccess() throws Exception {
+        // Arrange - Simula que há um ponto aberto
+        Ponto openPonto = new Ponto();
+        openPonto.setId(1L);
+        openPonto.setBolsista(new User());
+        openPonto.setHoraDeEntrada(java.time.LocalDateTime.now().minusHours(2));
+        openPonto.setHoraDeSaida(null); // Saída ainda não registrada
+
+        when(pontoRepository.findAllByBolsista(any(User.class))).thenReturn(List.of(openPonto));
+        // Simula o salvamento do ponto com a saída registrada
+        when(pontoRepository.save(any(Ponto.class))).thenReturn(openPonto);
+        var timeFeito = openPonto.getQtdDeHorasFeitas();
 
         // Act & Assert
-        mockMvc.perform(post("/spe/api/bolsista/entrada")
-                .with(bolsistaAuth())) // Autenticação como bolsista
-                .andExpect(status().isOk()) // Verifica se o status da resposta é 200 OK
-                .andExpect(content().string("Entrada registrada com sucesso!")); // Verifica a mensagem de sucesso
+        mockMvc.perform(post("/spe/api/bolsista/saida")
+        .with(bolsistaAuth())) // Autenticação como bolsista
+        .andExpect(status().isOk()) // Verifica se o status da resposta é 200 OK
+        .andExpect(content().string("Saída registrada com sucesso! Total de horas: 2.0")); // Verifica a mensagem de sucesso
     }
+    
+    @Test
+    public void testRegistrarSaidaNoOpenPonto() throws Exception {
+        // Arrange - Simula que não há pontos abertos
+        when(pontoRepository.findAllByBolsista(any(User.class))).thenReturn(List.of());
+
+        // Act & Assert
+        mockMvc.perform(post("/spe/api/bolsista/saida")
+        .with(bolsistaAuth())) // Autenticação como bolsista
+        .andExpect(status().isOk()) // Verifica se o status da resposta é 200 OK
+        .andExpect(content().string("Nenhum ponto aberto para finalizar.")); // Verifica a mensagem de nenhum ponto aberto
+    }
+    
+    @Test
+        public void testMudarSenhaSemPermission() throws Exception {
+            // Arrange - Preparar dados para mudança de senha
+            PasswordDTO passwordDTO = new PasswordDTO("NovaSenha123");
+
+            // Act & Assert
+            mockMvc.perform(put("/spe/api/admin/mudar-senha/bolsista/1")
+                    // .with(bolsistaAuth()) // Não autentica o usuário
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(mapper.writeValueAsString(passwordDTO)))
+                    .andExpect(status().is4xxClientError()); // Verifica se o status da resposta é 4xx (erro do cliente)
+        }
 
     @Test
     public void testMudarSenhaSuccess() throws Exception {
@@ -152,14 +198,35 @@ public class EndpointsIntegrationTests {
 
         // Act & Assert
         mockMvc.perform(put("/spe/api/admin/mudar-senha/bolsista/1")
-                .with(bolsistaAuth())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(passwordDTO)))
-                .andExpect(status().isOk()) // Verifica se o status da resposta é 200 OK
-                .andExpect(content().string("Senha atualizada com sucesso.")); // Verifica a mensagem de sucesso
+         .with(bolsistaAuth())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(mapper.writeValueAsString(passwordDTO)))
+        .andExpect(status().isOk()) // Verifica se o status da resposta é 200 OK
+       .andExpect(content().string("Password updated successfully")); // Verifica a mensagem de sucesso
+    }
+    
+    @Test
+    public void testMudarDadosSuccess() throws Exception {
+        // Arrange - Preparar dados para mudança de dados
+        UpdateDTO updateUserDTO = new UpdateDTO("Bolsista Atualizado", "updatedBolsista", "updated@example.com",
+                        Roles.BOLSISTA);
+        User mockBolsista = new User();
+        mockBolsista.setId(1L);
+        mockBolsista.setRoles(Roles.BOLSISTA);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(mockBolsista)); // Simula a busca do usuário pelo ID
+        when(userRepository.findByUsername("updatedBolsista")).thenReturn(null); // Simula que o username não existe
+        when(userRepository.findByEmail("updated@example.com")).thenReturn(null); // Simula que o email não existe
+        when(userRepository.save(any(User.class))).thenReturn(mockBolsista); // Simula o salvamento do usuário com os novos dados
+        // Act & Assert
+        mockMvc.perform(put("/spe/api/admin/mudar-dados/bolsista/1")
+         .with(bolsistaAuth())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(mapper.writeValueAsString(updateUserDTO)))
+        .andExpect(status().isOk()) // Verifica se o status da resposta é 200 OK
+       .andExpect(content().string("User data updated successfully.")); // Verifica a mensagem de sucesso
     }
 
-    // Métodos auxiliares corrigidos
+    // Helpers para autenticação nos testes
     private RequestPostProcessor adminAuth() {
         User adminUser = new User();
         adminUser.setUsername("admin");
