@@ -1,7 +1,3 @@
-# Análise de Memória
-- Estruturas eficientes são utilizadas ao longo do projeto, visando a uma maior otimização ao longo de todo o programa
-
-
 # Lições Aprendidas
 
 ### O que funcionou bem

@@ -82,7 +82,7 @@ Ao tentar se logar com uma solicitação inválida, o usuário recebe, incorreta
 
 
 
-## Bug #3: Erro de sincronização de relógio (servidor / máquina)
+## Bug #3: Erro de verificação no último ponto de bolsista
 
 ### Identificação
 - **Data:** 5-12-2025

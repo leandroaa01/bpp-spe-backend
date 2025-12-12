@@ -4,7 +4,7 @@
 # 4.1 Análise de Performance
 
 
-## Gargalo #1: Busca Linear em Lista Grande (repositório de usernames)
+## Gargalo #1: Busca Linear em Lista Grande (repositório de emails)
 ### Identificação
 - **Módulo:** bpp-spe-backend/src/main/java.dimap.ufrn.spe.api.v1/repositories/UserRepository
 - **Função:** getUserByEmail()
@@ -61,7 +61,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 <br>
 <br>
 
-## Gargalo #2: Busca Linear em Lista Grande (repositório de emails)
+## Gargalo #2: Busca Linear em Lista Grande (repositório de usernames)
 ### Identificação
 - **Módulo:** bpp-spe-backend/src/main/java.dimap.ufrn.spe.api.v1/repositories/UserRepository
 - **Função:** getUserByEmail()
