@@ -57,20 +57,6 @@ public class AdmController {
     })
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO data, BindingResult result) {
-        if (result.hasErrors()) {
-            return ResponseEntity.badRequest().body(result.getAllErrors());
-        }
-
-        if (this.repository.findByUsername(data.username()) != null) {
-            result.rejectValue("username", "409", "Username already in use");
-            return ResponseEntity.badRequest().body("Username already in use");
-        }
-
-        if (this.repository.findByEmail(data.email()) != null) {
-            result.rejectValue("email", "409", "Email already in use");
-            return ResponseEntity.badRequest().body("Email already in use");
-        }
-
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
         User newUser = new User(data.name(), data.username(), encryptedPassword, data.email(), data.roles());
 

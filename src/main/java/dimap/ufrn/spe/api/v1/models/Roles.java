@@ -1,8 +1,8 @@
 package dimap.ufrn.spe.api.v1.models;
 
 public enum Roles {
-    ADMIN("admin"),
-    BOLSISTA("bolsista");
+    ADMIN("ADMIN"),
+    BOLSISTA("BOLSISTA");
 
     private String role;
 
